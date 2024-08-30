@@ -26,8 +26,6 @@ Here is the Live Link to the site: https://hooked-on-books.vercel.app/
   - [Testing and Maintenance](#testing-and-maintenance-1)
   - [Deployment](#deployment-1)
   - [Contributing](#contributing)
-  - [License](#license)
-  - [Contact](#contact)
 
 ## Frontend
 
@@ -403,15 +401,5 @@ We welcome contributions to the **Hooked on Book** backend. To contribute:
     git push origin feature/your-feature-name
     ```
 5. **Submit a pull request** on GitHub.
-
-Please ensure that your code follows the project's coding standards and is well-documented.
-
-### License
-
-[Add your license information here]
-
-### Contact
-
-[Add your contact information here]
 
 Enjoy exploring and reviewing your favorite books with **Hooked on Book**!
