@@ -1,0 +1,13 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+.ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+  color: white;
+  border-color: none;
+  background: #1c71da;
+}
