@@ -2,6 +2,8 @@
 
 Welcome to **Hooked on Book**! This project is a web-based platform where users can discover, review, and discuss their favorite books. The application allows users to manage their book collections, add books, and rate and review them.
 
+Here is the Live Link to the site: https://hooked-on-books.vercel.app/
+
 ## Table of Contents
 
 - [Frontend](#frontend)
