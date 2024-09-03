@@ -119,3 +119,7 @@
   font-size: 14px;
   color: #777;
 }
+
+button{
+  width: auto !important;
+}

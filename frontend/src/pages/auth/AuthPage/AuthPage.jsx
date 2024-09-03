@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
-import { registerUser, login } from "../../../Api";
+import { registerUser, loginApi } from "../../../Api";
 import { message, Button } from "antd";
+import { useAuth } from "../../../AuthProvider";
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -33,6 +35,8 @@ const AuthPage = () => {
           localStorage.setItem("token", data.access_token);
           message.success("User registered successfully");
           setIsLogin(true);
+          login(data.access_token)
+
           navigate("/");
         } else {
           message.error(data.error);
@@ -40,12 +44,13 @@ const AuthPage = () => {
       } else {
         const loginData = { username, password };
 
-        login(loginData)
+        loginApi(loginData)
           .then((response) => {
             const data = response.data;
             if (data.access_token) {
               localStorage.setItem("token", data.access_token);
               message.success("Logged in successfully");
+              login(data.access_token)
               navigate("/");
             } else {
               message.error(data.error);

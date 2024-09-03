@@ -17,7 +17,7 @@ export const registerUser = async (formData) => {
 };
 //login
 
-export const login = async ({ username, password }) => {
+export const loginApi = async ({ username, password }) => {
   return axios
     .post(
       "https://hooked-on-books-39bd24fadd57.herokuapp.com/api/auth/login",

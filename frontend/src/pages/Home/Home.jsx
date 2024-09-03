@@ -5,6 +5,7 @@ import FeaturedInspiration from '../../components/FeaturedInspiration/FeaturedIn
 import './Home.css';
 import FeaturedBooks from '../../components/FeaturedBooks/FeaturedBooks';
 import Header from '../../components/Header/Header';
+import ContactUs from '../../components/Contactus/Contactus';
 
 const Home = () => {
   const [inspirations, setInspirations] = useState([]);
@@ -67,8 +68,9 @@ const Home = () => {
   return (
     <div className="home">
       <Hero />
-      <FeaturedInspiration inspirations={inspirations} />
+      {/* <FeaturedInspiration inspirations={inspirations} /> */}
       <FeaturedBooks books={books} />
+      <ContactUs/>
 
     </div>
   );

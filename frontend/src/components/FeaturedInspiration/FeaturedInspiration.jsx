@@ -5,7 +5,7 @@ import './FeaturedInspiration.css';
 
 const FeaturedInspiration = ({ inspirations }) => {
   return (
-    <section className="featured-inspiration">
+    <section className="featured-inspiration"id="inspiration">
       <h2>Featured Inspiration</h2>
       <div className="inspiration-grid">
         {inspirations.map((inspiration, index) => (

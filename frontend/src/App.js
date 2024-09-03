@@ -6,20 +6,24 @@ import AddBooks from "./pages/AddBooks/AddBooks";
 import Header from "./components/Header/Header";
 import AuthPage from "./pages/auth/AuthPage/AuthPage";
 import Profile from "./pages/Profile/Profile";
+import Footer from "./components/Footer/Footer";
 import SingleBook from "./pages/SingleBook/SingleBook";
+import { AuthProvider } from "./AuthProvider";
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem("token"));
 
   return (
     <div className="App">
+      <AuthProvider>
+
       <BrowserRouter>
         <Header />
         <Routes>
           <Route
             exact
             path="/"
-            element={token ? <Home /> : <Navigate to="/auth" />}
+            element={ <Home /> }
           />
           <Route path="/inspiration/:id" element={<InspirationDetail />} />
           <Route path="/add-book" element={<AddBooks />} />
@@ -30,7 +34,9 @@ function App() {
             element={token ? <Profile /> : <Navigate to="/auth" />}
           />
         </Routes>
+        <Footer/>
       </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }

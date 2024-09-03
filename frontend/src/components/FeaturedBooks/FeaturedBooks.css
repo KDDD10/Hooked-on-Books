@@ -20,7 +20,7 @@
 
 .book-item {
   width: 100%;
-  max-width: 200px;
+  /* max-width: 200px; */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -41,7 +41,7 @@
 }
 .book-item img {
   width: 100%;
-  height: 100%;
+  height: 300px;
   object-fit: cover;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

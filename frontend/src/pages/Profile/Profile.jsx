@@ -3,45 +3,94 @@ import "./Profile.css";
 import coverImage from "../../assets/Images/profile-cover.jpg";
 import bookImage from "../../assets/Images/cover.jpg";
 import profileImage from "../../assets/Images/profile.jpg";
-import { message, Button } from "antd";
+import { message, Button, Popconfirm } from "antd";
+import { DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../AuthProvider";
+import moment from "moment";
+
 const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [books, setBooks] = useState([]);
   const [loading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  useEffect(() => {
-    setUser({
-      name: "Jane Doe",
-      image: profileImage,
-      bio: "Avid reader and book enthusiast. Always on the lookout for the next great story!",
-      joinDate: "2023-01-15",
-    });
+  const { logout, user: authUser } = useAuth();
 
-    setBooks([
-      {
-        id: 1,
-        title: "The Great Gatsby",
-        author: "F. Scott Fitzgerald",
-        coverImage: bookImage,
-        dateAdded: "2024-03-10",
-      },
-      {
-        id: 2,
-        title: "1984",
-        author: "George Orwell",
-        coverImage: coverImage,
-        dateAdded: "2024-02-22",
-      },
-      {
-        id: 3,
-        title: "1984",
-        author: "George Orwell",
-        coverImage: bookImage,
-        dateAdded: "2024-02-22",
-      },
-    ]);
-  }, []);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`https://hooked-on-books-39bd24fadd57.herokuapp.com/api/auth/profile`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          setUser({
+            name: userData.username,
+            image: userData.profilePicture || profileImage,
+            bio: userData.bio || "Avid reader and book enthusiast. Always on the lookout for the next great story!",
+            joinDate: userData.createdAt,
+          });
+        } else {
+          throw new Error('Failed to fetch user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        message.error('Failed to load user data');
+      }
+    };
+
+    const fetchUserBooks = async () => {
+      try {
+        const response = await fetch(`https://hooked-on-books-39bd24fadd57.herokuapp.com/api/books/books/user/${authUser.id}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        if (response.ok) {
+          const userBooks = await response.json();
+          setBooks(userBooks.map(book => ({
+            id: book.id,
+            title: book.title,
+            author: book.author,
+            coverImage: book.cover_image_url || bookImage,
+            dateAdded: book.createdAt,
+          })));
+        } else {
+          throw new Error('Failed to fetch user books');
+        }
+      } catch (error) {
+        console.error('Error fetching user books:', error);
+        message.error('Failed to load user books');
+      }
+    };
+
+    if (authUser) {
+      fetchUserData();
+      fetchUserBooks();
+    }
+  }, [authUser]);
+
+  const handleDeleteBook = async (bookId) => {
+    try {
+      const response = await fetch(`https://hooked-on-books-39bd24fadd57.herokuapp.com/api/books/books/${bookId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      if (response.ok) {
+        setBooks(books.filter(book => book.id !== bookId));
+        message.success('Book deleted successfully');
+      } else {
+        throw new Error('Failed to delete book');
+      }
+    } catch (error) {
+      console.error('Error deleting book:', error);
+      message.error('Failed to delete book');
+    }
+  };
 
   if (!user) {
     return <div className="loading">Loading...</div>;
@@ -49,12 +98,10 @@ const ProfilePage = () => {
 
   const handleLogout = () => {
     setIsLoading(true);
-    setTimeout(() => {
-      localStorage.removeItem("token");
-      message.success("Logged out successfully");
-      setIsLoading(false);
-      navigate("/auth");
-    }, 500);
+    logout();
+    message.success("Logged out successfully");
+    setIsLoading(false);
+    navigate("/auth");
   };
 
   return (
@@ -72,7 +119,7 @@ const ProfilePage = () => {
           <h1>{user.name}</h1>
           <p className="bio">{user.bio}</p>
           <p className="join-date">
-            Joined: {new Date(user.joinDate).toLocaleDateString()}
+            Joined: {moment(user.joinDate).format('DD-MM-YYYY')}
           </p>
           <div>
             <Button
@@ -101,8 +148,16 @@ const ProfilePage = () => {
                 <h3>{book.title}</h3>
                 <p className="author">by {book.author}</p>
                 <p className="date-added">
-                  Added: {new Date(book.dateAdded).toLocaleDateString()}
+                  Added: {moment(book.dateAdded).format('DD-MM-YYYY')}
                 </p>
+                <Popconfirm
+                  title="Are you sure you want to delete this book?"
+                  onConfirm={() => handleDeleteBook(book.id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button icon={<DeleteOutlined />} danger />
+                </Popconfirm>
               </div>
             </div>
           ))}
